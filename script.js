@@ -1,67 +1,43 @@
-function ListaTarefas() {
+// Elementos do DOM
+const inputTarefa = document.querySelector('.input');
+const botaoAdicionar = document.querySelector('.botao');
+const listaTarefas = document.querySelector('.listaTarefa');
+const mensagem = document.querySelector('.mensagem');
+const contador = document.getElementById('contador');
+const botoesFiltro = document.querySelectorAll('.filtro-btn');
 
-  let botao = document.querySelector('.botao')
-
-  function AddTarefa() {
-    let inputTarefa = document.querySelector('.input')
-    let tarefa = inputTarefa.value.trim()
-
-    let mensagem = document.querySelector('.mensagem')
-
-    botao.classList.add('ativo')
-
-    if (tarefa === '') {
-      mensagem.classList.add('ativo')
-      mensagem.textContent = 'digite algo valido'
-    }
-    else {
-      mensagem.classList.remove('ativo')
-      mensagem.textContent = 'tarefa adicionada com sucesso'
-      let listatarefa = document.querySelector('.listaTarefa')
-      let novaTarefa = document.createElement('li')
-      let botaodelete = document.createElement('span')
-      botaodelete.innerText = 'X' 
-      novaTarefa.innerText = tarefa
-      listatarefa.appendChild(novaTarefa)
-      novaTarefa.appendChild(botaodelete)
-      botaodelete.classList.add('delete')
-      //botao de apagar  
-      botaodelete.addEventListener('click',  () => {
-      novaTarefa.remove()
-      })
-    }
-    //timer pra remover classe ativo do botao
-    setTimeout (()=>{
-      botao.classList.remove('ativo')
-    }, 150)
-
-    // auto-limpar apos click
-    inputTarefa.value = ''
-  }
-
-  botao.addEventListener('click', AddTarefa)
-}
-
-function atualizarContador() {
-  const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
-  const pendentes = tarefas.filter(t => !t.concluida).length;
-  document.getElementById('contador').textContent = `${pendentes} tarefa(s) pendente(s)`;
-}
-
+let tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
 let filtroAtual = 'todas';
 
-document.querySelectorAll('.filtro-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('ativo'));
-    this.classList.add('ativo');
-    filtroAtual = this.dataset.filtro;
-    renderizarTarefas();
-  });
-});
+// Salvar no localStorage
+function salvarTarefas() {
+  localStorage.setItem('tarefas', JSON.stringify(tarefas));
+}
 
+// Atualizar contador
+function atualizarContador() {
+  const pendentes = tarefas.filter(t => !t.concluida).length;
+  contador.textContent = `${pendentes} tarefa(s) pendente(s)`;
+}
+
+// Mostrar mensagem
+function mostrarMensagem(texto, tipo) {
+  mensagem.textContent = texto;
+  mensagem.classList.add('ativo');
+  if (tipo === 'erro') {
+    mensagem.style.backgroundColor = '#FF3300';
+  } else {
+    mensagem.style.backgroundColor = '#33ff33';
+    mensagem.style.color = '#0a0f0a';
+  }
+  setTimeout(() => {
+    mensagem.classList.remove('ativo');
+  }, 3000);
+}
+
+// Renderizar lista
 function renderizarTarefas() {
-  const lista = document.getElementById('lista-tarefas');
-  const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+  listaTarefas.innerHTML = '';
   
   let tarefasFiltradas = tarefas;
   if (filtroAtual === 'pendentes') {
@@ -70,34 +46,86 @@ function renderizarTarefas() {
     tarefasFiltradas = tarefas.filter(t => t.concluida);
   }
   
-  lista.innerHTML = '';
-  tarefasFiltradas.forEach((tarefa, index) => {
-    // seu código de criar cada item da lista
+  tarefasFiltradas.forEach((tarefa) => {
+    const indexReal = tarefas.indexOf(tarefa);
+    
+    const li = document.createElement('li');
+    li.classList.add('item-tarefa');
+    if (tarefa.concluida) li.classList.add('concluida');
+    
+    li.innerHTML = `
+      <span class="texto-tarefa">${tarefa.texto}</span>
+      <span class="data-tarefa">${tarefa.data}</span>
+      <span class="delete">X</span>
+    `;
+    
+    // Marcar como concluída
+    li.querySelector('.texto-tarefa').addEventListener('click', () => {
+      tarefas[indexReal].concluida = !tarefas[indexReal].concluida;
+      salvarTarefas();
+      renderizarTarefas();
+    });
+    
+    // Excluir tarefa
+    li.querySelector('.delete').addEventListener('click', (e) => {
+      e.stopPropagation();
+      li.classList.add('removendo');
+      setTimeout(() => {
+        tarefas.splice(indexReal, 1);
+        salvarTarefas();
+        renderizarTarefas();
+      }, 250);
+    });
+    
+    listaTarefas.appendChild(li);
   });
   
   atualizarContador();
 }
 
-function excluirTarefa(index) {
-  const item = document.querySelectorAll('.item-tarefa')[index];
-  item.classList.add('removendo');
+// Adicionar tarefa
+function adicionarTarefa() {
+  const texto = inputTarefa.value.trim();
   
-  setTimeout(() => {
-    const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
-    tarefas.splice(index, 1);
-    localStorage.setItem('tarefas', JSON.stringify(tarefas));
-    renderizarTarefas();
-    atualizarContador();
-  }, 250);
+  // Efeito 3D do botão
+  botaoAdicionar.classList.add('ativo');
+  setTimeout(() => botaoAdicionar.classList.remove('ativo'), 150);
+  
+  if (texto === '') {
+    mostrarMensagem('Digite algo válido!', 'erro');
+    return;
+  }
+  
+  const novaTarefa = {
+    texto: texto,
+    concluida: false,
+    data: new Date().toLocaleDateString('pt-BR')
+  };
+  
+  tarefas.push(novaTarefa);
+  salvarTarefas();
+  mostrarMensagem('Tarefa adicionada com sucesso!', 'sucesso');
+  inputTarefa.value = '';
+  inputTarefa.focus();
+  renderizarTarefas();
 }
 
-const novaTarefa = {
-  texto: texto,
-  concluida: false,
-  data: new Date().toLocaleDateString('pt-BR')
-};
+// Eventos
+botaoAdicionar.addEventListener('click', adicionarTarefa);
 
-const dataSpan = `<span class="data-tarefa">${tarefa.data || ''}</span>`;
-// Adicione isso dentro do HTML do item
+inputTarefa.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') adicionarTarefa();
+});
 
-ListaTarefas() 
+// Filtros
+botoesFiltro.forEach(btn => {
+  btn.addEventListener('click', function() {
+    botoesFiltro.forEach(b => b.classList.remove('ativo'));
+    this.classList.add('ativo');
+    filtroAtual = this.dataset.filtro;
+    renderizarTarefas();
+  });
+});
+
+// Iniciar
+renderizarTarefas();
