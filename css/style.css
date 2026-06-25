@@ -1,0 +1,125 @@
+@font-face {
+  font-family: Brice-regularSemiExpanded;
+  src: url(fontes/Brice-RegularSemiExpanded.ttf);
+}
+
+@font-face {
+  font-family: VT323-Regular;
+  src: url(fontes/VT323-Regular.ttf);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.body {
+  background-color: beige;
+}
+
+.corpo {
+    border: solid;
+    margin: 0.2rem;
+    /* border-radius: 15px; */
+}
+
+.container {
+  text-align: center;
+}
+
+.titulo {
+  font-size: 1.3rem;
+  font-family: Brice-regularSemiExpanded;
+  padding: 2rem;
+  text-align: center;
+  border: solid;
+  margin: 0.2rem;
+}
+
+
+.input {
+  margin: 1rem;
+  padding: 1rem;
+  width: 55%;
+  border: solid;
+  border-radius: 0.938rem;
+  background-color: transparent;
+  font-family: VT323-Regular;
+}
+
+.botao {
+  margin: 0.6rem;
+  width: 6rem;
+  height: 2rem;
+  text-align: center;
+  border: solid;
+  border-radius: 0.5rem;
+  font-family: VT323-Regular;
+  cursor: pointer;
+  background-color: #00FFFF;
+  box-shadow: 0px 3px 0px;
+  transition: all 0.1s;
+}
+
+.botao.ativo {
+  box-shadow: 0px 2px 0px;
+  position: relative;
+  top: 2px;
+}
+
+.mensagem {
+  display: none;
+}
+
+.mensagem.ativo {
+  display: block;
+  margin: 0.938rem;
+  padding: 1rem;
+  text-align: center;
+  background-color: #FF3300;
+  border: solid;
+  border-radius: 0.625rem;
+  font-family: VT323-Regular;
+}
+
+li {
+  margin: 0.938rem;
+  padding: 1rem;
+  text-align: center;
+  background-color: #FF3300;
+  border: solid;
+  border-radius: 0.625rem;
+  font-family: VT323-Regular;
+  list-style-type: none;
+}
+
+li .delete {
+  font-size: 0.375rem;
+  position: absolute;
+  right: 2.813rem;            
+  cursor: pointer;
+  display: inline-flex;
+  padding: 0.25rem;
+  transform: scale(3);
+}
+
+.footer a{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: black;
+    padding: 0.3rem;
+    font-family: VT323-Regular;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 700px) {
+  .titulo {
+    font-size: 0.90rem;
+  }
+}
