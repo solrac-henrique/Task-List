@@ -15,13 +15,12 @@
 }
 
 .body {
-  background-color: beige;
+  background-color: #0a0f0a;
 }
 
 .corpo {
-    border: solid;
-    margin: 0.2rem;
-    /* border-radius: 15px; */
+  border: solid;
+  margin: 0.2rem;
 }
 
 .container {
@@ -35,8 +34,8 @@
   text-align: center;
   border: solid;
   margin: 0.2rem;
+  color: #33ff33;
 }
-
 
 .input {
   margin: 1rem;
@@ -46,6 +45,7 @@
   border-radius: 0.938rem;
   background-color: transparent;
   font-family: VT323-Regular;
+  color: #33ff33;
 }
 
 .botao {
@@ -57,13 +57,14 @@
   border-radius: 0.5rem;
   font-family: VT323-Regular;
   cursor: pointer;
-  background-color: #00FFFF;
-  box-shadow: 0px 3px 0px;
+  background-color: #33ff33;
+  box-shadow: 0px 3px 0px #1a7a1a;
   transition: all 0.1s;
+  color: #0a0f0a;
 }
 
 .botao.ativo {
-  box-shadow: 0px 2px 0px;
+  box-shadow: 0px 2px 0px #1a7a1a;
   position: relative;
   top: 2px;
 }
@@ -83,46 +84,59 @@
   font-family: VT323-Regular;
 }
 
-li {
-  margin: 0.938rem;
-  padding: 1rem;
-  text-align: center;
-  background-color: #FF3300;
-  border: solid;
-  border-radius: 0.625rem;
-  font-family: VT323-Regular;
+.listaTarefa {
   list-style-type: none;
+  padding: 0;
 }
 
-li .delete {
-  font-size: 0.375rem;
-  position: absolute;
-  right: 2.813rem;            
+.item-tarefa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px dashed #33ff3344;
+  color: #33ff33;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.item-tarefa.concluida {
+  text-decoration: line-through;
+  color: #228b22;
+  opacity: 0.7;
+}
+
+.item-tarefa.removendo {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+.item-tarefa .delete {
   cursor: pointer;
-  display: inline-flex;
-  padding: 0.25rem;
-  transform: scale(3);
+  color: #ff4444;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 0 5px;
 }
 
-.footer a{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    color: black;
-    padding: 0.3rem;
-    font-family: VT323-Regular;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 1.2rem;
+.item-tarefa .delete:hover {
+  color: #ff0000;
+}
+
+.data-tarefa {
+  font-size: 10px;
+  color: #448844;
+  display: block;
 }
 
 .contador {
   font-size: 14px;
-  color: #aaa;
+  color: #33ff33;
   margin-bottom: 10px;
-  text-align: left;
+  text-align: center;
+  font-family: 'Courier New', monospace;
 }
 
 .filtros {
@@ -133,53 +147,30 @@ li .delete {
 }
 
 .filtro-btn {
-  background: #2a2a2a;
-  color: #aaa;
-  border: 1px solid #444;
+  background: #1a1a1a;
+  color: #33ff33;
+  border: 1px solid #33ff33;
   padding: 6px 14px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 13px;
   transition: 0.2s;
+  font-family: 'Courier New', monospace;
 }
 
 .filtro-btn.ativo {
-  background: #8fd9a8;
-  color: #1a1a1a;
-  border-color: #8fd9a8;
+  background: #33ff33;
+  color: #0a0f0a;
+  border-color: #33ff33;
   font-weight: bold;
 }
 
-.item-tarefa {
-  animation: fadeIn 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-.item-tarefa.removendo {
-  animation: fadeOut 0.3s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; transform: translateX(0); }
-  to { opacity: 0; transform: translateX(30px); }
-}
-
-.data-tarefa {
-  font-size: 11px;
-  color: #666;
-  display: block;
-}
-
+/* MONITOR RETRO */
 .monitor-container {
   position: relative;
   width: 100%;
   max-width: 500px;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 .monitor-bg {
@@ -196,18 +187,43 @@ li .delete {
   height: 65%;
   overflow-y: auto;
   padding: 10px;
-  font-family: 'Courier New', monospace;
-  color: #33ff33; /* verde de terminal retro */
-  font-size: 14px;
 }
 
-/* Estiliza a barra de rolagem pro estilo retro */
 .tela-monitor::-webkit-scrollbar {
   width: 4px;
 }
+
 .tela-monitor::-webkit-scrollbar-thumb {
   background: #33ff33;
   border-radius: 2px;
+}
+
+.tela-monitor::-webkit-scrollbar-track {
+  background: #0a1a0a;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(30px); }
+}
+
+.footer a {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: #33ff33;
+  padding: 0.3rem;
+  font-family: VT323-Regular;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
 
 @media (max-width: 700px) {
