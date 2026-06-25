@@ -41,4 +41,63 @@ function ListaTarefas() {
 
   botao.addEventListener('click', AddTarefa)
 }
+
+function atualizarContador() {
+  const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+  const pendentes = tarefas.filter(t => !t.concluida).length;
+  document.getElementById('contador').textContent = `${pendentes} tarefa(s) pendente(s)`;
+}
+
+let filtroAtual = 'todas';
+
+document.querySelectorAll('.filtro-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('ativo'));
+    this.classList.add('ativo');
+    filtroAtual = this.dataset.filtro;
+    renderizarTarefas();
+  });
+});
+
+function renderizarTarefas() {
+  const lista = document.getElementById('lista-tarefas');
+  const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+  
+  let tarefasFiltradas = tarefas;
+  if (filtroAtual === 'pendentes') {
+    tarefasFiltradas = tarefas.filter(t => !t.concluida);
+  } else if (filtroAtual === 'concluidas') {
+    tarefasFiltradas = tarefas.filter(t => t.concluida);
+  }
+  
+  lista.innerHTML = '';
+  tarefasFiltradas.forEach((tarefa, index) => {
+    // seu código de criar cada item da lista
+  });
+  
+  atualizarContador();
+}
+
+function excluirTarefa(index) {
+  const item = document.querySelectorAll('.item-tarefa')[index];
+  item.classList.add('removendo');
+  
+  setTimeout(() => {
+    const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+    tarefas.splice(index, 1);
+    localStorage.setItem('tarefas', JSON.stringify(tarefas));
+    renderizarTarefas();
+    atualizarContador();
+  }, 250);
+}
+
+const novaTarefa = {
+  texto: texto,
+  concluida: false,
+  data: new Date().toLocaleDateString('pt-BR')
+};
+
+const dataSpan = `<span class="data-tarefa">${tarefa.data || ''}</span>`;
+// Adicione isso dentro do HTML do item
+
 ListaTarefas() 
